@@ -46,7 +46,11 @@ function App() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  habit: inputHabit;
+                  setSummaryHabit([...summaryHabit, { habit: inputHabit }]);
+                  {
+                    /*Debugging console*/
+                  }
+                  console.log("DEBUG Input Field:", inputHabit);
                 }}
               >
                 Save
@@ -63,11 +67,11 @@ function App() {
         <h2>Saved Habits</h2>
         <div>
           <ul>
-            {summaryHabit.map((item, index) => {
+            {summaryHabit.map((item, index) => (
               <li className="habit-card" key={index}>
                 <span>Habit: {item.habit}</span>
-              </li>;
-            })}
+              </li>
+            ))}
           </ul>
         </div>
       </section>
