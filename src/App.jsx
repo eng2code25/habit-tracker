@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
@@ -13,9 +13,23 @@ function App() {
   const [inputHabit, setInputHabit] = useState("");
 
   {
-    /*Overall data*/
+    /*Overall data and add persistence into local storage*/
   }
-  const [summaryHabit, setSummaryHabit] = useState([]);
+  const [summaryHabit, setSummaryHabit] = useState(() => {
+    const saved = localStorage.getItem("habits");
+    {
+      /*debugging note*/
+    }
+    console.log("check storage: ", saved);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  {
+    /*write data into local storage*/
+  }
+  useEffect(() => {
+    localStorage.setItem("habits", JSON.stringify(summaryHabit));
+  }, [summaryHabit]);
 
   return (
     <section>
