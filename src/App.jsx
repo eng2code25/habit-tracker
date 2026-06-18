@@ -31,6 +31,16 @@ function App() {
     localStorage.setItem("habits", JSON.stringify(summaryHabit));
   }, [summaryHabit]);
 
+  {
+    /*delete event handler*/
+  }
+  const deleteFunction = (indexToDelete) => {
+    const updateIt = summaryHabit.filter((item, currentIndex) => {
+      return currentIndex !== indexToDelete;
+    });
+    setSummaryHabit(updateIt);
+  };
+
   return (
     <section>
       <h1>My Habit Tracker</h1>
@@ -84,6 +94,7 @@ function App() {
             {summaryHabit.map((item, index) => (
               <li className="habit-card" key={index}>
                 <span>Habit: {item.habit}</span>
+                <button onClick={() => deleteFunction(index)}>Delete</button>
               </li>
             ))}
           </ul>
