@@ -41,6 +41,27 @@ function App() {
     setSummaryHabit(updateIt);
   };
 
+  const [editingIndex, setEditingIndex] = useState(null);
+  {
+    /*Edit event handler*/
+  }
+  const editFunction = (indexToEdit) => {
+    const targetEdit = summaryHabit[indexToEdit];
+    setInputTable(true);
+    setInputHabit(targetEdit.habit);
+    setEditingIndex(indexToEdit);
+    return;
+  };
+
+  {
+    /*
+    click edit
+    drop down editor
+    data gets transferred to editor
+    delete data from UI and local storage
+    */
+  }
+
   return (
     <section>
       <h1>My Habit Tracker</h1>
@@ -70,11 +91,27 @@ function App() {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  setSummaryHabit([...summaryHabit, { habit: inputHabit }]);
-                  {
-                    /*Debugging console*/
+
+                  if (editingIndex !== null) {
+                    const xxx = summaryHabit.map((item, currentIndex) => {
+                      if (currentIndex === editingIndex) {
+                        return { habit: inputHabit };
+                      } else {
+                        return item;
+                      }
+                    });
+                    setSummaryHabit(xxx);
+                  } else {
+                    setSummaryHabit([...summaryHabit, { habit: inputHabit }]);
+                    {
+                      /*Debugging console*/
+                    }
+                    console.log("DEBUG Input Field:", inputHabit);
                   }
-                  console.log("DEBUG Input Field:", inputHabit);
+
+                  setInputHabit("");
+                  setInputTable(false);
+                  setEditingIndex(null);
                 }}
               >
                 Save
@@ -95,6 +132,7 @@ function App() {
               <li className="habit-card" key={index}>
                 <span>Habit: {item.habit}</span>
                 <button onClick={() => deleteFunction(index)}>Delete</button>
+                <button onClick={() => editFunction(index)}>Edit</button>
               </li>
             ))}
           </ul>
