@@ -50,17 +50,18 @@ function App() {
     setInputTable(true);
     setInputHabit(targetEdit.habit);
     setEditingIndex(indexToEdit);
-    return;
   };
 
   {
-    /*
-    click edit
-    drop down editor
-    data gets transferred to editor
-    delete data from UI and local storage
-    */
+    /*serach, compare state management*/
   }
+  const [search, setSearch] = useState("");
+
+  const searchFunction = (item) => {
+    const searchCleanUp = search.trim().toLowerCase();
+    const cleanHabitName = item.habit.toLowerCase();
+    return cleanHabitName.includes(searchCleanUp);
+  };
 
   return (
     <section>
@@ -93,14 +94,14 @@ function App() {
                   e.preventDefault();
 
                   if (editingIndex !== null) {
-                    const xxx = summaryHabit.map((item, currentIndex) => {
+                    const update = summaryHabit.map((item, currentIndex) => {
                       if (currentIndex === editingIndex) {
                         return { habit: inputHabit };
                       } else {
                         return item;
                       }
                     });
-                    setSummaryHabit(xxx);
+                    setSummaryHabit(update);
                   } else {
                     setSummaryHabit([...summaryHabit, { habit: inputHabit }]);
                     {
@@ -126,15 +127,24 @@ function App() {
       {/*Display UI section*/}
       <section>
         <h2>Saved Habits</h2>
+        <input
+          placeholder="Search here..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        ></input>
         <div>
           <ul>
-            {summaryHabit.map((item, index) => (
-              <li className="habit-card" key={index}>
-                <span>Habit: {item.habit}</span>
-                <button onClick={() => deleteFunction(index)}>Delete</button>
-                <button onClick={() => editFunction(index)}>Edit</button>
-              </li>
-            ))}
+            {summaryHabit
+              .filter((item) => {
+                return searchFunction(item);
+              })
+              .map((item, index) => (
+                <li className="habit-card" key={index}>
+                  <span>Habit: {item.habit}</span>
+                  <button onClick={() => deleteFunction(index)}>Delete</button>
+                  <button onClick={() => editFunction(index)}>Edit</button>
+                </li>
+              ))}
           </ul>
         </div>
       </section>
