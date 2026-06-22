@@ -49,6 +49,7 @@ function App() {
     const targetEdit = summaryHabit[indexToEdit];
     setInputTable(true);
     setInputHabit(targetEdit.habit);
+    setTag(targetEdit.tags || "N/A");
     setEditingIndex(indexToEdit);
   };
 
@@ -62,6 +63,11 @@ function App() {
     const cleanHabitName = item.habit.toLowerCase();
     return cleanHabitName.includes(searchCleanUp);
   };
+
+  {
+    /*state management for tags*/
+  }
+  const [tag, setTag] = useState("N/A");
 
   return (
     <section>
@@ -87,6 +93,14 @@ function App() {
               <textarea className="note-text"></textarea>
             </div>
           </div>
+          <div>
+            <label>Tags: </label>
+            <select value={tag} onChange={(e) => setTag(e.target.value)}>
+              <option value="N/A">N/A</option>
+              <option value="home">Home</option>
+              <option value="work">Work</option>
+            </select>
+          </div>
           <div className="button-input">
             <div>
               <button
@@ -96,14 +110,17 @@ function App() {
                   if (editingIndex !== null) {
                     const update = summaryHabit.map((item, currentIndex) => {
                       if (currentIndex === editingIndex) {
-                        return { habit: inputHabit };
+                        return { habit: inputHabit, tags: tag };
                       } else {
                         return item;
                       }
                     });
                     setSummaryHabit(update);
                   } else {
-                    setSummaryHabit([...summaryHabit, { habit: inputHabit }]);
+                    setSummaryHabit([
+                      ...summaryHabit,
+                      { habit: inputHabit, tags: tag },
+                    ]);
                     {
                       /*Debugging console*/
                     }
@@ -111,6 +128,7 @@ function App() {
                   }
 
                   setInputHabit("");
+                  setTag("N/A");
                   setInputTable(false);
                   setEditingIndex(null);
                 }}
@@ -119,7 +137,13 @@ function App() {
               </button>
             </div>
             <div>
-              <button onClick={() => setInputTable(false)}>Close</button>
+              <button
+                onClick={() => {
+                  (setInputTable(false), setInputHabit(""), setTag("N/A"));
+                }}
+              >
+                Close
+              </button>
             </div>
           </div>
         </form>
@@ -132,6 +156,14 @@ function App() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         ></input>
+        <div className="habit-count">
+          <div>
+            <label>Total Habits: {summaryHabit.length}</label>
+          </div>
+          <div>
+            <label>Habits at home: </label>
+          </div>
+        </div>
         <div>
           <ul>
             {summaryHabit
@@ -141,6 +173,7 @@ function App() {
               .map((item, index) => (
                 <li className="habit-card" key={index}>
                   <span>Habit: {item.habit}</span>
+                  <span>Tag: {item.tags}</span>
                   <button onClick={() => deleteFunction(index)}>Delete</button>
                   <button onClick={() => editFunction(index)}>Edit</button>
                 </li>
